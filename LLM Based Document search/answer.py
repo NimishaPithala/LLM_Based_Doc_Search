@@ -5,10 +5,8 @@ from sentence_transformers import SentenceTransformer
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 
-# Load embedding model
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
-# Load generator model and tokenizer
 tokenizer = AutoTokenizer.from_pretrained("distilgpt2")
 generator = AutoModelForCausalLM.from_pretrained("distilgpt2")
 
@@ -37,7 +35,6 @@ def generate_answer(context_chunks, question, max_length=150):
     max_model_length = 1024  # distilgpt2 max input length
 
     if inputs.size(1) > max_model_length:
-        # truncate input tokens to max_model_length
         inputs = inputs[:, -max_model_length:]
 
     outputs = generator.generate(
@@ -46,11 +43,10 @@ def generate_answer(context_chunks, question, max_length=150):
         do_sample=True,
         temperature=0.7,
         pad_token_id=tokenizer.eos_token_id,
-        attention_mask=torch.ones_like(inputs)  # simple attention mask
+        attention_mask=torch.ones_like(inputs)  
     )
 
     answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    # Remove prompt from generated text
     return answer[len(prompt):].strip()
 
 if __name__ == "__main__":
