@@ -1,3 +1,5 @@
+#Needs fixing (may be need more data, or check the code, meanwhile use python search.py)
+
 import os
 import faiss
 import numpy as np
